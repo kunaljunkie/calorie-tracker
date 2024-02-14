@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<body>
+    <div>
+        <header class="header">
+            <div class="container">
+                <div class="logo">
+                    <a href="#">
+                        <img src="assets/logo.png">
+                    </a>
+                </div>
+            </div>
+        </header>
+        <div class="mid-container">
+            <div class="container user-all-date-data">
+                <div class="title-row">
+                    <h1 class="title">James</h1>
+                    <div class="title-row-right">
+                        <button class="btn-primary" data-toggle="modal" data-target="#addDataModal">Add Data</button>
+                    </div>
+                </div>
+                <div class="date-input-card">
+                    <div class="date-input">
+                        <input type="date" (input)="filter($event)" placeholder="Age">
+                    </div>
+                  
+                </div>
+                
+                <div class="user-list ">
+                    <div class="white-card">
+                        <h2>All Data</h2>
+                        <table class="dcf-table dcf-table-responsive dcf-table-bordered dcf-table-striped dcf-w-100%">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">BMR</th>
+                                    <th scope="col">Calorie In</th>
+                                    <th scope="col">Calorie Out</th>
+                                    <th scope="col">Net Calorie</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor='let ele of userDetails'>
+                                    <th scope="row"> {{ ele.date |date:'shortDate' }}</th>
+                                    <td data-label="BMR">{{ele.bmr | number:'1.1-1'}}</td>
+                                    <td data-label="Calorie In">{{ele.caloriein | number:'1.1-1'}}</td>
+                                    <td data-label="Calorie Out">{{ele.calorieout | number:'1.1-1'}}</td>
+                                    <td data-label="Net Calorie">{{ele.netcalorie  | number:'1.1-1'}}</td>
+                                    <td data-label="Action">
+                                        <div class="btn-set">
+                                          <a class="btn-secondary" (click)="openuserdetail(ele.userid,ele.date)">View</a>
+                                        </div>
+                                    </td>
+                            </tbody>
+                        </table>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="container">
+                <p>2022 LMD Consulting, LLC , All Rights Reserved</p>
+            </div>
+        </footer>
+    </div>
+    <!-- Modal Box Start -->
+    <div class="modal fade" id="addDataModal" tabindex="-1" aria-labelledby="addDataModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content add-data-modal">
+                <div class="modal-header">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="food-tab" data-toggle="tab" href="#food" role="tab"
+                                aria-controls="food" aria-selected="true">Add Food</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="activity-tab" data-toggle="tab" href="#activity" role="tab"
+                                aria-controls="activity" aria-selected="false">Add Activity</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="checkoutForm">
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="food" role="tabpanel" aria-labelledby="food-tab">
+                                <div class="input-field">
+                                    <label>Select Date</label>
+                                    <input type="date" formControlName="date"  placeholder="Age">
+                                </div>
+                               
+                                <div class="input-field" >
+                                    <label>Select Food Name</label>
+                                    <select class="selectbox" (change)="foodName($event)"  >
+                                        <option *ngFor='let ele of foodname'   [value]="ele.ID">{{ele.name}}</option>
+                                    </select>
+                                </div>
+                                <div class="input-field">
+                                    <label>Select Meal Type</label>
+                                    <select class="selectbox"  (change)="mealtype($event)">
+                                        <option [value]="'Breakfast'">Breakfast</option>
+                                        <option [value]="'Lunch'">Lunch</option>
+                                        <option [value]="'Dinner'">Dinner</option>
+                                    </select>
+                                </div>
+                                <div class="input-field">
+                                    <label>Select Food Group</label>
+                                    <select class="selectbox" (change)="getfoodgroupvalue($event)">
+                                        <option *ngFor='let ele of foodgroup' [value]="ele">{{ele}}</option>
+                                    </select>
+                                </div>
+                              
+                                <div class="input-field">
+                                    <label>Serving</label>
+                                    <input type="text" name="serving" formControlName="serving" required  placeholder="Serving" />
+                                </div>
+                                <div class="input-field input-field-btn btn-set--center">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="foodValues()">Save</button>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="activity" role="tabpanel" aria-labelledby="activity-tab">
+                                <div class="input-field">
+                                    <label>Select Date</label>
+                                    <input type="date" formControlName="activityDate" placeholder="Age">
+                                </div>
+                                <div class="input-field">
+                                    <label>Activity Name</label>
+                                    <select class="selectbox" (change)="getmetactivityname($event)">
+                                        <option *ngFor='let ele of activities' [value]="ele.specificMotion" >{{ele.specificMotion}}</option>
+                                    </select>
+                                </div>
+                                <div class="input-field">
+                                    <label>Activity Description</label>
+                                    <textarea placeholder="Description" formControlName="ActivityDescription"></textarea>
+                                </div>
+                                <div class="input-field">
+                                    <label>MET Value</label>
+                                    <input type="text" [value]="METValue" formControlName="metvalue" placeholder="Value">
+                                </div>
+                                <div class="input-field">
+                                    <label>Activity Duration</label>
+                                    <input type="time" formControlName="ActivityDuration"  placeholder="Age">
+                                </div>
+                                <div class="input-field input-field-btn btn-set--center">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="foodValues()">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Box End -->
+</body>
+
+
+</html>
