@@ -19,6 +19,7 @@ export class UserDataComponent {
   activityDetails: any;
   foodDetails: any;
   fetchuserid: any;
+  username:any
 
   MealtypeVAR:any
   FoodGroupVAR:any
@@ -43,6 +44,7 @@ export class UserDataComponent {
    
    this.activeRoute.queryParamMap.subscribe((res:any)=>{
       this.userid = res.params.userid
+      this.username = res.params.name
       localStorage.setItem('userid',this.userid)
     })
 

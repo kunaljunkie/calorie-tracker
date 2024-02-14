@@ -39,9 +39,10 @@
                                 <th scope="col">{{ele.BMR| number:'1.1-1'}}</th>
                                 <td data-label="Action">
                                     <div class="btn-set">
-                                        <a class="btn-secondary" (click)="openUserdata(ele._id)">View</a>
+                                        <a class="btn-secondary" (click)="openUserdata(ele._id,ele.Name)">View</a>
                                         <button class="btn-primary add-data-btn" data-toggle="modal" data-target="#addDataModal" (click)="addUser(ele._id)">Add
                                             Data</button>
+                                            <a class="btn-secondary" (click)="openConfirmationDialog(ele._id,ele.Name)">Delete</a>
                                     </div>
                                 </td>
                             </tr>

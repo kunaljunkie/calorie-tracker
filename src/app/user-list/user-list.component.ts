@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { HttpApiService } from '../services/http-api.service';
 import { Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
+import { ConfirmationDialogComponentComponent } from '../confirmation-dialog-component/confirmation-dialog-component.component';
+import { MatDialog } from '@angular/material/dialog';
+
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
@@ -30,10 +33,12 @@ export class UserListComponent {
     ActivityDuration: '',
     metvalue: '',
   });
+  
   constructor(
     private route: Router,
     private apiservice: HttpApiService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private dialog: MatDialog
   ) {
     this.getusers();
     this.getfoodnames();
@@ -66,8 +71,8 @@ export class UserListComponent {
     });
   }
 
-  openUserdata(id: any) {
-    const queryParams = { userid: id };
+  openUserdata(id: any,name:any) {
+    const queryParams = { userid: id,name:name };
     this.route.navigate(['/user-data'], { queryParams });
   }
 
@@ -139,5 +144,33 @@ export class UserListComponent {
 
   addUser(id: any) {
     this.fetchuserid = id;
+  }
+  openConfirmationDialog(userId: string,name:any): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponentComponent, {
+      width: '300px',
+      height: '250px',
+      data: {
+        title: 'Confirmation',
+        message: `Are you sure you want to delete ${name}?`,
+      },
+    });
+  
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        // User clicked 'Confirm', proceed with deletion
+        this.deleteuser(userId);
+      } else {
+        // User clicked 'Cancel', do nothing
+      }
+    });
+  }
+  deleteuser(id:any){
+    let query = `?userid=${id}`;
+    this.apiservice.delete(query,"delte").then((res:any)=>{
+      if(res){
+        alert(res.mesage)
+        this.getusers()
+      }
+    })
   }
 }

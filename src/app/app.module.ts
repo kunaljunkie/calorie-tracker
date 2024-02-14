@@ -17,6 +17,7 @@ import { HttpClientModule } from '@angular/common/http';
 // import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ConfirmationDialogComponentComponent } from './confirmation-dialog-component/confirmation-dialog-component.component';
 // import { AddDataComponent } from './add-data/add-data.component';
 // import { DialogComponent } from './dialog/dialog.component';
 // import { ModalContentComponent } from './modal-content/modal-content.component';
@@ -29,6 +30,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     UserDetailsComponent,
     UserDataComponent,
     UserListComponent,
+    ConfirmationDialogComponentComponent,
    
   ],
   imports: [

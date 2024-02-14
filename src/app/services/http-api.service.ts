@@ -55,5 +55,16 @@ export class HttpApiService {
       })
     })
   }
+  delete(query:any,url:any){
+    let apiurl= this.api+url+query
+    return new Promise((resolve ,reject)=>{
+      this.http.delete(apiurl,{headers:this.headers}).subscribe((res: any)=>{
+        resolve(res)},
+      (err: any)=>{
+        reject(err)
+      
+      })
+    })
+  }
 
 }
