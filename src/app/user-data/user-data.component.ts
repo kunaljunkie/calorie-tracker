@@ -33,7 +33,11 @@ export class UserDataComponent {
     ActivityDescription: '',
     ActivityDuration: '',
     metvalue: '',
+    none:''
   });
+searchTerm: any='';
+
+searchTermActivity: any='';
   constructor(
     private route: Router,
     private activeRoute: ActivatedRoute,
@@ -160,4 +164,26 @@ export class UserDataComponent {
       }
     });
   }
+  filterOptions() {
+    this.foodname = this.foodname.filter((option:any) =>
+     option.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+   );
+   if(this.searchTerm.length == 0 || this.foodname.length == 0){
+     let foodgroup = this.FoodGroupVAR ? this.FoodGroupVAR :this.foodgroup[0] ;
+     this.getfoodname(foodgroup)
+   }
+ }
+
+ onSearchTermChange() {
+   this.filterOptions();
+ }
+
+ onSearchTermChangeActivty(){
+   this.activities = this.activities.filter((option:any) =>
+   option.specificMotion.toLowerCase().includes(this.searchTermActivity.toLowerCase())
+ );
+ if(this.searchTermActivity.length == 0 || this.activities.length == 0){
+   this.getactivity()
+ }
+ }
 }

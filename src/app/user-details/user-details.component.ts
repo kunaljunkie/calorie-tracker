@@ -34,7 +34,10 @@ export class UserDetailsComponent {
     ActivityDescription: '',
     ActivityDuration: '',
     metvalue: '',
+    none:''
   });
+searchTerm: any='';
+searchTermActivity: any='';
   constructor(
     private activeRoute: ActivatedRoute,
     private apiservice: HttpApiService,
@@ -86,10 +89,9 @@ export class UserDetailsComponent {
         date: this.checkoutForm.value.date,
         serving: this.checkoutForm.value.serving,
       };
-
       var timeParts = this.checkoutForm.value.ActivityDuration
         ? this.checkoutForm.value.ActivityDuration.split(':')
-        : '';
+        : ['00','00'];
       let minutes = Number(timeParts[0]) * 60 + Number(timeParts[1]);
 
       let activityobj = {
@@ -166,4 +168,26 @@ export class UserDetailsComponent {
       }
     });
   }
+  filterOptions() {
+    this.foodname = this.foodname.filter((option:any) =>
+     option.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+   );
+   if(this.searchTerm.length == 0 || this.foodname.length == 0){
+     let foodgroup = this.FoodGroupVAR ? this.FoodGroupVAR :this.foodgroup[0] ;
+     this.getfoodname(foodgroup)
+   }
+ }
+
+ onSearchTermChange() {
+   this.filterOptions();
+ }
+
+ onSearchTermChangeActivty(){
+   this.activities = this.activities.filter((option:any) =>
+   option.specificMotion.toLowerCase().includes(this.searchTermActivity.toLowerCase())
+ );
+ if(this.searchTermActivity.length == 0 || this.activities.length == 0){
+   this.getactivity()
+ }
+ }
 }

@@ -97,6 +97,7 @@
                                 </div>
                                 <div class="input-field" >
                                     <label>Select Food Name</label>
+                                    <input [(ngModel)]="searchTerm" formControlName="serving" placeholder="Search..." (ngModelChange)="onSearchTermChange()">
                                     <select class="selectbox" (change)="foodName($event)"  >
                                         <option *ngFor='let ele of foodname'   [value]="ele.ID">{{ele.name}}</option>
                                     </select>
@@ -128,6 +129,7 @@
                                 </div>
                                 <div class="input-field">
                                     <label>Activity Name</label>
+                                    <input [(ngModel)]="searchTermActivity" formControlName="none" placeholder="Search..." (ngModelChange)="onSearchTermChangeActivty()">
                                     <select class="selectbox" (change)="getmetactivityname($event)">
                                         <option *ngFor='let ele of activities' [value]="ele.specificMotion" >{{ele.specificMotion}}</option>
                                     </select>

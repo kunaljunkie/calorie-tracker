@@ -6,11 +6,11 @@ import { UserListComponent } from './user-list/user-list.component';
 import { UserDataComponent } from './user-data/user-data.component';
 
 
+
 const routes: Routes = [
   {
     path:'',
     component:SignUpComponent,
-    
   },
   {
     path:'user-details',
@@ -24,6 +24,8 @@ const routes: Routes = [
     path:'user-data',
     component:UserDataComponent
   },
+  
+ 
  
 
 ];

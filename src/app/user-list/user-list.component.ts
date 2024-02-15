@@ -24,7 +24,6 @@ export class UserListComponent {
   FoodGroupVAR: any;
   FoodNameVAR: any;
   ActivityNameVAR: any;
-
   checkoutForm = this.formBuilder.group({
     date: '',
     serving: '',
@@ -32,7 +31,11 @@ export class UserListComponent {
     ActivityDescription: '',
     ActivityDuration: '',
     metvalue: '',
+    none:''
   });
+inputValue: any;
+searchTerm: any = '';
+searchTermActivity: any='';
   
   constructor(
     private route: Router,
@@ -160,11 +163,8 @@ export class UserListComponent {
   
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        // User clicked 'Confirm', proceed with deletion
         this.deleteuser(userId);
-      } else {
-        // User clicked 'Cancel', do nothing
-      }
+      } 
     });
   }
   deleteuser(id:any){
@@ -175,5 +175,28 @@ export class UserListComponent {
         this.getusers()
       }
     })
+  }
+
+  filterOptions() {
+     this.foodname = this.foodname.filter((option:any) =>
+      option.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+    if(this.searchTerm.length == 0 || this.foodname.length == 0){
+      let foodgroup = this.FoodGroupVAR ? this.FoodGroupVAR :this.foodgroup[0] ;
+      this.getfoodname(foodgroup)
+    }
+  }
+
+  onSearchTermChange() {
+    this.filterOptions();
+  }
+
+  onSearchTermChangeActivty(){
+    this.activities = this.activities.filter((option:any) =>
+    option.specificMotion.toLowerCase().includes(this.searchTermActivity.toLowerCase())
+  );
+  if(this.searchTermActivity.length == 0 || this.activities.length == 0){
+    this.getactivity()
+  }
   }
 }
