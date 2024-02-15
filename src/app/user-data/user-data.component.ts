@@ -122,7 +122,7 @@ searchTermActivity: any='';
 
       var timeParts = this.checkoutForm.value.ActivityDuration
         ? this.checkoutForm.value.ActivityDuration.split(':')
-        : '';
+        :  ['00','00'];
       let minutes = Number(timeParts[0]) * 60 + Number(timeParts[1]);
 
       let activityobj = {
