@@ -2,8 +2,6 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpApiService } from '../services/http-api.service';
 import { FormBuilder } from '@angular/forms';
-// import { CommonService } from '../services/common.service';
-
 @Component({
   selector: 'app-user-details',
   templateUrl: './user-details.component.html',
@@ -60,6 +58,7 @@ export class UserDetailsComponent {
       for (let i of res.data) {
         this.activities.push(i);
       }
+      this.METValue = this.activities[0].METs;
     });
   }
 
@@ -81,9 +80,9 @@ export class UserDetailsComponent {
   foodValues() {
     if (this.checkoutForm.valid && this.checkoutForm.value) {
       let foodObj = {
-        foodgroup: this.FoodGroupVAR,
-        foodname: this.FoodNameVAR,
-        mealtype: this.MealtypeVAR,
+        foodgroup: this.FoodGroupVAR ? this.FoodGroupVAR :this.foodgroup[0] ,
+        foodname: this.FoodNameVAR ? this.FoodNameVAR : this.foodname[0].ID,
+        mealtype: this.MealtypeVAR ? this.MealtypeVAR : 'Breakfast',
         date: this.checkoutForm.value.date,
         serving: this.checkoutForm.value.serving,
       };
@@ -94,12 +93,13 @@ export class UserDetailsComponent {
       let minutes = Number(timeParts[0]) * 60 + Number(timeParts[1]);
 
       let activityobj = {
-        metvalue: this.METValue,
+        metvalue: this.METValue ? this.METValue : this.METValue,
         ActivityDuration: minutes.toString(),
-        ActivityName: this.ActivityNameVAR,
+        ActivityName: this.ActivityNameVAR ? this.ActivityNameVAR : this.activities[0].specificMotion,
         activityDate: this.checkoutForm.value.activityDate,
         ActivityDescription: this.checkoutForm.value.ActivityDescription,
       };
+
 
       let finalobj = {
         fooddata: foodObj,
@@ -126,8 +126,6 @@ export class UserDetailsComponent {
     this.METValue = filtervalue[0].METs;
   }
   filter(event: any) {
-    // let datestring = `${event.target.value}T00:00:00.000Z`;
-    // const dateObject = new Date(datestring);
     this.date = event.target.value;
     this.getuserDetailsbydate();
   }

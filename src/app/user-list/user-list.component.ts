@@ -66,6 +66,7 @@ export class UserListComponent {
   }
 
   async getusers() {
+    this.userData=[]
     this.apiservice.get('', 'getall-users').then((res: any) => {
       this.userData = res.data;
     });
@@ -107,10 +108,11 @@ export class UserListComponent {
 
   foodValues() {
     if (this.checkoutForm.valid && this.checkoutForm.value) {
+     
       let foodObj = {
-        foodgroup: this.FoodGroupVAR,
-        foodname: this.FoodNameVAR,
-        mealtype: this.MealtypeVAR,
+        foodgroup: this.FoodGroupVAR ? this.FoodGroupVAR :this.foodgroup[0] ,
+        foodname: this.FoodNameVAR ? this.FoodNameVAR : this.foodname[0].ID,
+        mealtype: this.MealtypeVAR ? this.MealtypeVAR : 'Breakfast',
         date: this.checkoutForm.value.date,
         serving: this.checkoutForm.value.serving,
       };
@@ -121,9 +123,9 @@ export class UserListComponent {
       let minutes = Number(timeParts[0]) * 60 + Number(timeParts[1]);
 
       let activityobj = {
-        metvalue: this.METValue,
+        metvalue: this.METValue ? this.METValue : this.METValue,
         ActivityDuration: minutes.toString(),
-        ActivityName: this.ActivityNameVAR,
+        ActivityName: this.ActivityNameVAR ? this.ActivityNameVAR : this.activities[0].specificMotion,
         activityDate: this.checkoutForm.value.activityDate,
         ActivityDescription: this.checkoutForm.value.ActivityDescription,
       };
@@ -133,10 +135,11 @@ export class UserListComponent {
         activitydata: activityobj,
         userid: this.fetchuserid,
       };
-
+    
       this.apiservice.post(finalobj, 'userdetial').then((res: any) => {
         if (res && res.details) {
           alert('Date Saved Successfully');
+          this.getusers();
         }
       });
     }

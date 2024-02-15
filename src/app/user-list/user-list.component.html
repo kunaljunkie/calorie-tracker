@@ -82,7 +82,12 @@
                                     <label>Select Date</label>
                                     <input type="date" formControlName="date"  placeholder="Age">
                                 </div>
-                               
+                                <div class="input-field">
+                                    <label>Select Food Group</label>
+                                    <select class="selectbox" (change)="getfoodgroupvalue($event)">
+                                        <option *ngFor='let ele of foodgroup' [value]="ele">{{ele}}</option>
+                                    </select>
+                                </div>
                                 <div class="input-field" >
                                     <label>Select Food Name</label>
                                     <select class="selectbox" (change)="foodName($event)"  >
@@ -92,17 +97,13 @@
                                 <div class="input-field">
                                     <label>Select Meal Type</label>
                                     <select class="selectbox"  (change)="mealtype($event)">
+                                        <option >Select </option>
                                         <option [value]="'Breakfast'">Breakfast</option>
                                         <option [value]="'Lunch'">Lunch</option>
                                         <option [value]="'Dinner'">Dinner</option>
                                     </select>
                                 </div>
-                                <div class="input-field">
-                                    <label>Select Food Group</label>
-                                    <select class="selectbox" (change)="getfoodgroupvalue($event)">
-                                        <option *ngFor='let ele of foodgroup' [value]="ele">{{ele}}</option>
-                                    </select>
-                                </div>
+                                
                               
                                 <div class="input-field">
                                     <label>Serving</label>

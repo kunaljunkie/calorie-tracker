@@ -7,24 +7,24 @@ import { FormBuilder } from '@angular/forms';
 @Component({
   selector: 'app-user-data',
   templateUrl: './user-data.component.html',
-  styleUrls: ['./user-data.component.scss']
+  styleUrls: ['./user-data.component.scss'],
 })
 export class UserDataComponent {
   userid: any;
-  userDetails:any=[]
-  activities:any=[]
-  foodgroup:any=[]
-  foodname:any=[]
+  userDetails: any = [];
+  activities: any = [];
+  foodgroup: any = [];
+  foodname: any = [];
   METValue: any;
   activityDetails: any;
   foodDetails: any;
   fetchuserid: any;
-  username:any
+  username: any;
 
-  MealtypeVAR:any
-  FoodGroupVAR:any
-  FoodNameVAR:any
-  ActivityNameVAR:any
+  MealtypeVAR: any;
+  FoodGroupVAR: any;
+  FoodNameVAR: any;
+  ActivityNameVAR: any;
 
   checkoutForm = this.formBuilder.group({
     date: '',
@@ -32,137 +32,132 @@ export class UserDataComponent {
     activityDate: '',
     ActivityDescription: '',
     ActivityDuration: '',
-    metvalue: ''
+    metvalue: '',
   });
   constructor(
     private route: Router,
     private activeRoute: ActivatedRoute,
     private apiservice: HttpApiService,
-    private formBuilder: FormBuilder,
-  ){
+    private formBuilder: FormBuilder
+  ) {
+    this.activeRoute.queryParamMap.subscribe((res: any) => {
+      this.userid = res.params.userid;
+      this.username = res.params.name;
+      localStorage.setItem('userid', this.userid);
+    });
 
-   
-   this.activeRoute.queryParamMap.subscribe((res:any)=>{
-      this.userid = res.params.userid
-      this.username = res.params.name
-      localStorage.setItem('userid',this.userid)
-    })
-
-    this.getuserdetails()
-    this.getfood()
-    this.getactivity()
-
-
+    this.getuserdetails();
+    this.getfood();
+    this.getactivity();
   }
 
- async getactivity(){
-    this.apiservice.get("","getactivity").then((res:any)=>{
-      for(let i of res.data){
-        this.activities.push(i)
+  async getactivity() {
+    this.apiservice.get('', 'getactivity').then((res: any) => {
+      for (let i of res.data) {
+        this.activities.push(i);
       }
-    })
+      this.METValue = this.activities[0].METs;
+
+    });
   }
 
-  async getfood(){
-    this.apiservice.get("","getfood").then((res:any)=>{
-      for(let i of res.data){
-        this.foodgroup.push(i._id)
+  async getfood() {
+    this.apiservice.get('', 'getfood').then((res: any) => {
+      for (let i of res.data) {
+        this.foodgroup.push(i._id);
       }
-      this.getfoodname(this.foodgroup[0])
-    })
+      this.getfoodname(this.foodgroup[0]);
+    });
   }
-  foodName(event:any){
-    this.FoodNameVAR = event.target.value
+  foodName(event: any) {
+    this.FoodNameVAR = event.target.value;
   }
-  mealtype(event:any){
-    this.MealtypeVAR = event.target.value
-
+  mealtype(event: any) {
+    this.MealtypeVAR = event.target.value;
   }
 
   getmetactivityname(ele: any) {
-    this.ActivityNameVAR = ele.target.value.toString()
+    this.ActivityNameVAR = ele.target.value.toString();
     const filtervalue = this.activities.filter((element: any) => {
       return element.specificMotion === ele.target.value.toString();
     });
     this.METValue = filtervalue[0].METs;
   }
 
- async getuserdetails(){
-    if(this.userid){
-      let query = `?userid=${this.userid}`
-    this.apiservice.get(query,'getuserdetails').then((res:any)=>{
-      this.userDetails=res.data
-    })
+  async getuserdetails() {
+    if (this.userid) {
+      let query = `?userid=${this.userid}`;
+      this.apiservice.get(query, 'getuserdetails').then((res: any) => {
+        this.userDetails = res.data;
+      });
     }
   }
 
-  filter(event:any){
-    let query = `?userid=${this.userid}&date=${event.target.value}`
-    this.userDetails=[]
-    this.apiservice.get(query,'getuserdetails').then((res:any)=>{
-      this.userDetails=res.data
-    })
+  filter(event: any) {
+    let query = `?userid=${this.userid}&date=${event.target.value}`;
+    this.userDetails = [];
+    this.apiservice.get(query, 'getuserdetails').then((res: any) => {
+      this.userDetails = res.data;
+    });
   }
 
-
-  openuserdetail(userid:any,date:any){
-    const queryParams = { userid: userid._id, date:date};
+  openuserdetail(userid: any, date: any) {
+    const queryParams = { userid: userid._id, date: date };
     this.route.navigate(['/user-details'], { queryParams });
   }
 
   foodValues() {
-
-    if(this.checkoutForm.valid && this.checkoutForm.value){
+    if (this.checkoutForm.valid && this.checkoutForm.value) {
       let foodObj = {
-        foodgroup:this.FoodGroupVAR,
-        foodname :this.FoodNameVAR,
-        mealtype :  this.MealtypeVAR,
-        date : this.checkoutForm.value.date,
-        serving :  this.checkoutForm.value.serving
-      }
-    
-      var timeParts = this.checkoutForm.value.ActivityDuration ? this.checkoutForm.value.ActivityDuration.split(":"):"" ;
+        foodgroup: this.FoodGroupVAR ? this.FoodGroupVAR :this.foodgroup[0] ,
+        foodname: this.FoodNameVAR ? this.FoodNameVAR : this.foodname[0].ID,
+        mealtype: this.MealtypeVAR ? this.MealtypeVAR : 'Breakfast',
+        date: this.checkoutForm.value.date,
+        serving: this.checkoutForm.value.serving,
+      };
+
+      var timeParts = this.checkoutForm.value.ActivityDuration
+        ? this.checkoutForm.value.ActivityDuration.split(':')
+        : '';
       let minutes = Number(timeParts[0]) * 60 + Number(timeParts[1]);
-  
-      let activityobj ={
-        metvalue : this.METValue,
-        ActivityDuration : minutes.toString(),
-        ActivityName : this.ActivityNameVAR,
-        activityDate : this.checkoutForm.value.activityDate,
-        ActivityDescription : this.checkoutForm.value.ActivityDescription
-      }
-      
+
+      let activityobj = {
+        metvalue: this.METValue ? this.METValue : this.METValue,
+        ActivityDuration: minutes.toString(),
+        ActivityName: this.ActivityNameVAR ? this.ActivityNameVAR : this.activities[0].specificMotion,
+        activityDate: this.checkoutForm.value.activityDate,
+        ActivityDescription: this.checkoutForm.value.ActivityDescription,
+      };
+
       let finalobj = {
         fooddata: foodObj,
         activitydata: activityobj,
         userid: this.userid,
       };
 
-    this.apiservice.post(finalobj,"userdetial").then((res:any)=>{
-      if(res && res.details){
-        alert("Date Saved Successfully")
-        this.getuserdetails()
-      }
-    })
-    }else {
-      alert('form is not valid')
+      this.apiservice.post(finalobj, 'userdetial').then((res: any) => {
+        if (res && res.details) {
+          alert('Date Saved Successfully');
+          this.getuserdetails();
+        }
+      });
+    } else {
+      alert('form is not valid');
     }
-
   }
 
-  getfoodgroupvalue(event:any){
-    this.FoodGroupVAR = event.target.value
-   this.getfoodname(event.target.value)
+  getfoodgroupvalue(event: any) {
+    this.FoodGroupVAR = event.target.value;
+    this.getfoodname(event.target.value);
   }
 
-  getfoodname(foodgroup:any){
-    this.foodname = []
-    let query = `?foodgroup=${foodgroup}`
-      this.apiservice.get(query,"getfoodname").then((res:any)=>{
-       for(let i of res.data){
-         this.foodname.push(i)
-       }
-     })
+  getfoodname(foodgroup: any) {
+    this.foodname = [];
+    let query = `?foodgroup=${foodgroup}`;
+    this.apiservice.get(query, 'getfoodname').then((res: any) => {
+      for (let i of res.data) {
+        this.foodname.push(i);
+      }
+    });
   }
-    
 }
