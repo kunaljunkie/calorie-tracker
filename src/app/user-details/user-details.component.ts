@@ -81,34 +81,52 @@ searchTermActivity: any='';
   }
 
   foodValues() {
-    if (this.checkoutForm.valid && this.checkoutForm.value) {
-      let foodObj = {
-        foodgroup: this.FoodGroupVAR ? this.FoodGroupVAR :this.foodgroup[0] ,
-        foodname: this.FoodNameVAR ? this.FoodNameVAR : this.foodname[0].ID,
-        mealtype: this.MealtypeVAR ? this.MealtypeVAR : 'Breakfast',
-        date: this.checkoutForm.value.date,
-        serving: this.checkoutForm.value.serving,
-      };
+    if (this.checkoutForm.value.serving || this.checkoutForm.value.ActivityDuration) {
+      let foodObj
+      if(this.checkoutForm.value.serving){
+        foodObj = {
+          foodgroup: this.FoodGroupVAR ? this.FoodGroupVAR :this.foodgroup[0] ,
+          foodname: this.FoodNameVAR ? this.FoodNameVAR : this.foodname[0].ID,
+          mealtype: this.MealtypeVAR ? this.MealtypeVAR : 'Breakfast',
+          date: this.checkoutForm.value.date,
+          serving: this.checkoutForm.value.serving,
+        };
+      } else {
+        foodObj = {
+          foodgroup: "" ,
+          foodname:"",
+          mealtype: "",
+          date: "",
+          serving: "",
+        };
+      }
       var timeParts = this.checkoutForm.value.ActivityDuration
         ? this.checkoutForm.value.ActivityDuration.split(':')
-        : ['00','00'];
+        :  ['00','00'];
       let minutes = Number(timeParts[0]) * 60 + Number(timeParts[1]);
+      if(this.ActivityNameVAR){
+        this.ActivityNameVAR = this.ActivityNameVAR
+      } else {
+        this.ActivityNameVAR = this.activities[0].specificMotion
+      }
+      if(minutes==0){
+        this.ActivityNameVAR = ""
+      }
 
       let activityobj = {
         metvalue: this.METValue ? this.METValue : this.METValue,
         ActivityDuration: minutes.toString(),
-        ActivityName: this.ActivityNameVAR ? this.ActivityNameVAR : this.activities[0].specificMotion,
+        ActivityName: this.ActivityNameVAR ,
         activityDate: this.checkoutForm.value.activityDate,
         ActivityDescription: this.checkoutForm.value.ActivityDescription,
       };
-
 
       let finalobj = {
         fooddata: foodObj,
         activitydata: activityobj,
         userid: this.userid,
       };
-
+      console.log(finalobj)
       this.apiservice.post(finalobj,"userdetial").then((res:any)=>{
         if(res && res.details){
           alert("Date Saved Successfully")

@@ -36,7 +36,7 @@
                                 <td data-label="Height">{{ele.Height}}</td>
                                 <td data-label="Gender">{{ele.Gender}}</td>
                                 <td data-label="Age">{{ele.Age  | number:'1.1-1'}}</td>
-                                <th scope="col">{{ele.BMR| number:'1.1-1'}}</th>
+                                <th scope="col">{{ele.bmr| number:'1.1-1'}}</th>
                                 <td data-label="Action">
                                     <div class="btn-set">
                                         <a class="btn-secondary" (click)="openUserdata(ele._id,ele.Name)">View</a>
@@ -111,7 +111,7 @@
                               
                                 <div class="input-field">
                                     <label>Serving</label>
-                                    <input type="text" name="serving" formControlName="serving" required  placeholder="Serving" />
+                                    <input type="text" name="serving" formControlName="serving" placeholder="Serving" />
                                 </div>
                                 <div class="input-field input-field-btn btn-set--center">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
